@@ -81,6 +81,28 @@ Work up the ladder; most alternatives fail on step 1 already:
 - Scan the diff for placeholders standing in for logic: hardcoded `false`/`true`/`0`/`[]`/`""`, `TODO`, dead constants. A `SELECT FALSE AS has_feature` left in a projection makes the flag dead for every row and the filter match nobody — and nothing fails loudly.
 - The model that wrote this — including you — can be confidently wrong. Point at the line most likely to be the bug.
 
+
+### 5b. Verify your own explanation before it becomes a fact
+
+The model teaching this lesson is the same model that wrote the code. A wrong explanation the user restates faithfully gets recorded as `owned` and turns into confident, invisible misinformation. That is the worst thing this skill can produce.
+
+**Repeating yourself is not verification.** A second pass — or a second agent on the same model — reproduces the same confident error, and agreement then reads as evidence. Independence must come from a different *grounding*, not from a vote:
+
+| grounding | independence |
+|---|---|
+| run the code | total — it is a fact, not an opinion |
+| read the library source or the spec | high |
+| a different model | moderate |
+| the same model, asked twice | none |
+
+So, before anything in security, money, data integrity or concurrency is recorded as `owned`:
+
+- **Run it where the claim is executable.** A five-line probe settles "does this API actually see the move history" harder than any amount of reasoning.
+- **Read the implementation, not your memory of it.** Dispatch a source-reading subagent (`librarian` or equivalent) to confirm the mechanism against the real library code or RFC, and to quote the line it relied on.
+- **Separate verified from recalled.** Say which is which, and record unverified claims with `"verified": false`.
+
+Skip this for low-stakes concepts. It costs a subagent round-trip; spend it where being wrong is expensive.
+
 ### 6. Gate
 
 If they cannot restate the WHAT and the WHY, say plainly: **don't merge this yet.** Comprehension is the merge gate, not "tests pass".
@@ -98,14 +120,26 @@ Ledger: `~/.mentor/knowledge.jsonl` — append-only, one JSON object per line.
 
 **After teaching a concept, append exactly one line.** Never rewrite, reorder, or reformat the file — append only. (Read-modify-write on a shared file is the `lost update` race this skill teaches; appending sidesteps it.)
 
+A concept may therefore appear several times. **The last line for a concept wins**; earlier ones are its history — useful for showing how an understanding moved from `shaky` to `owned`, never for deciding the current state.
+
 ```json
 {"ts":"2026-01-15","concept":"PKCE","aliases":["code_verifier","code_challenge","S256"],
  "status":"owned","domain":"auth/oidc","taught_on":"backend/security/oidc.py:96-113",
- "restated":true,"misconceptions":["thought the protection came from the string being unguessable"],
+ "restated":true,"verified":true,"review_after":"2026-04-15",
+ "misconceptions":["thought the protection came from the string being unguessable"],
  "related":["state","nonce","hash","confidential client"],
  "artifact":"spotted a missing browser binding on the state parameter",
  "next":"confirm the fix landed"}
 ```
+
+`owned` is not permanent. Understanding decays; a concept explained once and never met again is gone in a few months, and a stale `owned` actively suppresses the re-teaching that would fix it.
+
+Set `review_after` about 90 days out when recording `owned`. On meeting that concept again past its `review_after`, do not stay silent: ask **one** verification question first.
+
+- passes → append a fresh line with a new `review_after` and move on;
+- fails → append it as `shaky` and re-teach.
+
+`seen` and `shaky` need no TTL — they are already unresolved.
 
 `status` vocabulary — be strict, the honesty of this field is the whole value of the file:
 
