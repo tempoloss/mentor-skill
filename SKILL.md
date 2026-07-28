@@ -1,6 +1,7 @@
 ---
 name: mentor
-description: Use when the user accepts, reviews, or asks about non-trivial code — their own or AI-generated — and should understand it rather than just ship it. Triggers on "mentor", "teach me", "explain this", "quiz me", or right after generating concurrency / security / DB-query / algorithm / auth code. Runs a comprehension loop instead of a lecture: show the failure, compare the options, price the choice, name the terms, then make the user restate it and grade them.
+description: >-
+  Use when the user accepts, reviews, or asks about non-trivial code — their own or AI-generated — and should understand it rather than just ship it. Triggers on "mentor", "teach me", "explain this", "quiz me", or right after generating concurrency / security / DB-query / algorithm / auth code. Runs a comprehension loop instead of a lecture: show the failure, compare the options, price the choice, name the terms, then make the user restate it and grade them.
 ---
 
 # Mentor mode
