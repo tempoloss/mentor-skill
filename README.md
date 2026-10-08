@@ -9,7 +9,7 @@ It targets *comprehension debt*: code that ships without anyone able to defend i
 ## Install
 
 ```bash
-git clone https://github.com/anek-dev/mentor-skill ~/.claude/skills/mentor
+git clone https://github.com/tempoloss/mentor-skill ~/.claude/skills/mentor
 ```
 
 Any agent that discovers `<skills-root>/<name>/SKILL.md` works — Claude Code (`~/.claude/skills/`), Codex (`~/.codex/skills/`), and compatible runtimes.
